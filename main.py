@@ -51,10 +51,11 @@ def main():
 
     if args.saved_path_teacher:
         state_dict = torch.load(args.saved_path_teacher)
-        teacher = models_dict[args.teacher](num_classes=terminal_layer[args.dataset]).load_state_dict(state_dict)
+        teacher = models_dict[args.teacher](num_classes=terminal_layer[args.dataset])
+        teacher.load_state_dict(state_dict)
     else:
         teacher = train_teacher(models_dict[args.teacher](num_classes=terminal_layer[args.dataset]), trainloader, args.lr, args.wd, args.epochs, args.momentum, args.schedule, args.schedule_gamma, args.seed)
-        
+
         if args.path_to_save_teacher:
             torch.save(teacher.state_dict(), args.path_to_save_teacher)
             print(f"Success! Model saved to: {args.path_to_save_teacher}.pt")

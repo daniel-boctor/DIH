@@ -1,6 +1,7 @@
 import torch
 import torchvision
 import argparse
+import os
 from models.resnets import *
 from dataloader import load_datasets
 from train_teacher import train_teacher
@@ -54,8 +55,15 @@ def main():
     else:
         teacher = train_teacher(models_dict[args.teacher](num_classes=terminal_layer[args.dataset]), trainloader, args.lr, args.wd, args.epochs, args.momentum, args.schedule, args.schedule_gamma, args.seed)
 
-    torch.save(teacher.state_dict(), (args.path_to_save_teacher if args.path_to_save_teacher else f'./models/saved/{args.dataset}/{args.teacher}.pth'))
-    print(f"Success! Model saved to: ./models/saved/{args.dataset}/{args.teacher}.pt")
+
+    if args.path_to_save_teacher:
+        torch.save(teacher.state_dict(), args.path_to_save_teacher)
+        print(f"Success! Model saved to: {args.path_to_save_teacher}.pt")
+    else:
+        if not(os.path.isdir(f'./models/saved/{args.dataset}')):
+            os.mkdir(f'./models/saved/{args.dataset}')
+        torch.save(teacher.state_dict(), f'./models/saved/{args.dataset}/{args.teacher}.pt')
+        print(f"Success! Model saved to: ./models/saved/{args.dataset}/{args.teacher}.pt")
 
     evaluate(teacher, testloader)
 

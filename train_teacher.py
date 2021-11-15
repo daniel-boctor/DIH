@@ -13,6 +13,7 @@ def train_teacher(net, trainloader, lr, wd, epochs, momentum, milestones, gamma,
     optimizer = torch.optim.SGD(net.parameters(), lr, momentum=momentum, weight_decay=wd)
     scheduler = torch.optim.lr_scheduler.MultiStepLR(optimizer, milestones=milestones, gamma=gamma)
 
+    print("Training Started!")
     for epoch in range(epochs):  # loop over the dataset multiple times
 
         running_loss = 0.0
@@ -29,9 +30,9 @@ def train_teacher(net, trainloader, lr, wd, epochs, momentum, milestones, gamma,
             loss = criterion(outputs[0], labels)
             loss.backward()
             optimizer.step()
-            
             running_loss += loss.item()
-            
+
+        scheduler.step()
         print(f"EPOCH {epoch+1}: {running_loss/len(trainloader)}")
 
     print('Finished Training')

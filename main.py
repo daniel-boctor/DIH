@@ -34,7 +34,8 @@ def parse_args():
     args = parser.parse_args()
 
     for (arg,value) in args._get_kwargs():
-        print(f"{arg} : {value}\n{'*'*30}")
+        #print(f"{arg} : {value}\n{'*'*30}")
+        print(arg+" : "+str(value)+"\n"+"*"*30)
 
     return args
 
@@ -54,8 +55,10 @@ def main():
     else:
         teacher = train_teacher(models_dict[args.teacher](num_classes=terminal_layer[args.dataset]), trainloader, args.lr, args.wd, args.epochs, args.momentum, args.schedule, args.schedule_gamma, args.seed)
 
-    torch.save(teacher.state_dict(), (args.path_to_save_teacher if args.path_to_save_teacher else f'./models/saved/{args.dataset}/{args.teacher}.pth'))
-    print(f"Success! Model saved to: ./models/saved/{args.dataset}/{args.teacher}.pt")
+    #torch.save(teacher.state_dict(), (args.path_to_save_teacher if args.path_to_save_teacher else f'./models/saved/{args.dataset}/{args.teacher}.pth'))
+    torch.save(teacher.state_dict(), (args.path_to_save_teacher if args.path_to_save_teacher else "./models/saved/"+args.dataset+"/"+args.teacher+".pth"))
+    #print(f"Success! Model saved to: ./models/saved/{args.dataset}/{args.teacher}.pt")
+    print("Success! Model saved to: ./models/saved/"+args.dataset+"/"+args.teacher+".pt")
 
     evaluate(teacher, testloader)
 

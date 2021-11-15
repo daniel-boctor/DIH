@@ -54,16 +54,15 @@ def main():
         teacher = models_dict[args.teacher](num_classes=terminal_layer[args.dataset]).load_state_dict(state_dict)
     else:
         teacher = train_teacher(models_dict[args.teacher](num_classes=terminal_layer[args.dataset]), trainloader, args.lr, args.wd, args.epochs, args.momentum, args.schedule, args.schedule_gamma, args.seed)
-
-
-    if args.path_to_save_teacher:
-        torch.save(teacher.state_dict(), args.path_to_save_teacher)
-        print(f"Success! Model saved to: {args.path_to_save_teacher}.pt")
-    else:
-        if not(os.path.isdir(f'./models/saved/{args.dataset}')):
-            os.mkdir(f'./models/saved/{args.dataset}')
-        torch.save(teacher.state_dict(), f'./models/saved/{args.dataset}/{args.teacher}.pt')
-        print(f"Success! Model saved to: ./models/saved/{args.dataset}/{args.teacher}.pt")
+        
+        if args.path_to_save_teacher:
+            torch.save(teacher.state_dict(), args.path_to_save_teacher)
+            print(f"Success! Model saved to: {args.path_to_save_teacher}.pt")
+        else:
+            if not(os.path.isdir(f'./models/saved/{args.dataset}')):
+                os.makedirs(f'./models/saved/{args.dataset}')
+            torch.save(teacher.state_dict(), f'./models/saved/{args.dataset}/{args.teacher}.pt')
+            print(f"Success! Model saved to: ./models/saved/{args.dataset}/{args.teacher}.pt")
 
     evaluate(teacher, testloader)
 
